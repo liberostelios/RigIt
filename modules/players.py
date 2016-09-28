@@ -15,23 +15,23 @@ class PlayersListWidgetItem(QListWidgetItem):
         self.playerEntry = playerEntry
 
 
-class PlayersWidget(QWidget, Ui_PlayersWidget): 
+class PlayersWidget(QWidget, Ui_PlayersWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setupUi(self)
         self._setPlayerEntryFieldsEnabled(False)
-        
+
         self._editData = None
         self.playerEntryProxy = PlayerEntryProxy()
         self.appearanceEntryProxy = AppearanceEntryProxy()
-        
+
         # 4CC related variables
         self.cardLimit = 0
         self.medalType = 'bronze'
-        
+
         # Connect to load/save menu
         self.parent().loadedEditData.connect(self.loadEditData)
-        
+
         # Fill comboboxes
         fillQComboBox(self.cbxStrongerFoot, StrongerFoot)
         fillQComboBox(self.cbxPlayingStyle, PlayingStyle)
@@ -40,7 +40,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         fillQComboBox(self.cbxSpectacles, Spectacles)
         fillQComboBox(self.cbxSpectaclesFrameColor, SpectaclesFrameColor)
         fillQComboBox(self.cbxIrisColor, IrisColor)
-        
+
         # Connect signals to slots
         self.lstPlayerEntries.currentItemChanged.connect(self.loadPlayerEntry)
         self.btnMakeGoldPlayer.clicked.connect(lambda:
@@ -50,14 +50,14 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         self.btnMakeBronzePlayer.clicked.connect(lambda:
         self.makeMedalPlayer('bronze'))
         self.spxPlayerId.valueChanged.connect(self.setPlayerIdHex)
-        self.ldtPlayerName.textChanged.connect(self._updateListWidgetText) 
+        self.ldtPlayerName.textChanged.connect(self._updateListWidgetText)
         self.btnCommentaryNone.clicked.connect(self.setCommentaryToNone)
         self.btnMotionRandomize.clicked.connect(self.randomizeMotions)
         for child in self.boxPlayerSkills.findChildren(QCheckBox):
             child.clicked.connect(lambda checked:
             self.changeValueByOne(self.spxRemainingPlayerSkills, checked))
             child.clicked.connect(lambda checked:
-            self.changeValueByOne(self.spxRemainingCards, checked))    
+            self.changeValueByOne(self.spxRemainingCards, checked))
         for child in self.boxComPlayingStyles.findChildren(QCheckBox):
             child.clicked.connect(lambda checked:
             self.changeValueByOne(self.spxRemainingComPlayingStyles, checked))
@@ -65,7 +65,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
             self.changeValueByOne(self.spxRemainingCards, checked))
         self._wireUpPlayerEntryProxy()
         self._wireUpAppearanceEntryProxy()
-    
+
     def _wireUpPlayerEntryProxy(self):
         proxy = self.playerEntryProxy
         proxy.cleverConnect(self.chbEditedCreatedPlayer, 'editedCreatedPlayer')
@@ -179,7 +179,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.spxWeakFootAccuracy, 'weakFootAccuracy')
         proxy.cleverConnect(self.spxForm, 'form')
         proxy.cleverConnect(self.spxInjuryResistance, 'injuryResistance')
-    
+
     def _wireUpAppearanceEntryProxy(self):
         proxy = self.appearanceEntryProxy
         proxy.cleverConnect(self.chbEditedFaceSettings, 'editedFaceSettings')
@@ -196,7 +196,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.cbxSpectacles, 'spectaclesMenuId')
         proxy.cleverConnect(self.cbxSkinColor, 'skinColorMenuId')
         proxy.cleverConnect(self.cbxIrisColor, 'irisColorMenuId')
-        
+
     def _setPlayerEntryFieldsEnabled(self, enable):
         self.boxPlayers.setEnabled(enable)
         self.box4CC.setEnabled(enable)
@@ -208,8 +208,8 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         self.boxPlayerSkills.setEnabled(enable)
         self.boxAbility.setEnabled(enable)
         self.boxAppearanceLimited.setEnabled(enable)
-     
-    @pyqtSlot(QObject, QObject)
+
+    @pyqtSlot(QListWidgetItem, QListWidgetItem)
     def loadPlayerEntry(self, current, previous):
         self.playerEntryProxy.setProxySubject(None)
         self.appearanceEntryProxy.setProxySubject(None)
@@ -220,10 +220,10 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
             current.playerEntry.playerId)
             except KeyError:
                 QMessageBox.critical(None, 'Error', 'Player has no ' +
-                'appearance entry.\n\nChanges made to the appearance will ' + 
+                'appearance entry.\n\nChanges made to the appearance will ' +
                 'not be saved. Please create a custom face in-game first.')
                 appearanceEntry = AppearanceEntry()
-                
+
             self.appearanceEntryProxy.setProxySubject(appearanceEntry)
             self.determineMedalStatus()
             self.spxRemainingCards.setValue(self.cardLimit)
@@ -245,7 +245,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
                     self.spxRemainingCards.value() - 1)
             print('The player was determined to be a ' + self.medalType +
             ' medal')
-    
+
     def determineMedalStatus(self): #TODO: improve
         if (self.playerEntryProxy.ballControl <= 77):
             self.medalType = 'bronze'
@@ -260,7 +260,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         else:
             self.medalType = 'gold'
             self.cardLimit = 4
-    
+
     @pyqtSlot(int)
     def setPlayerIdHex(self, value): #TODO: this is pretty dirty
         le = (value & 0x000000FF) << 24
@@ -269,7 +269,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         le += (value & 0xFF000000) >> 24
         self.spxPlayerIdHex.setValue(-1)
         self.spxPlayerIdHex.setSpecialValueText('0x' + hex(le)[2:].upper())
-    
+
     @pyqtSlot(EditData)
     def loadEditData(self, editData):
         self._editData = editData
@@ -282,12 +282,12 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         self.lstPlayerEntries.setCurrentRow(0) # select first item
         self.spxPlayerCount.setValue(len(editData.playerEntries))
         self._setPlayerEntryFieldsEnabled(True)
-    
+
     @pyqtSlot(str)
     def _updateListWidgetText(self, str):
         self.lstPlayerEntries.currentItem().setText(str)
-    
-    @pyqtSlot(str)    
+
+    @pyqtSlot(str)
     def makeMedalPlayer(self, medal):
         print('Make ' + medal.capitalize() + ' Medal player...')
         self.medalType = medal
@@ -350,12 +350,12 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
             object.setValue(object.value() - 1)
         else:
             object.setValue(object.value() + 1)
-    
+
     @pyqtSlot()
     def setCommentaryToNone(self):
         self.playerEntryProxy.commentaryName = -1 # equals 0xFFFFFFFF
-    
-    @pyqtSlot(str)
+
+    @pyqtSlot(bool)
     def randomizeMotions(self): #TODO: pull these numbers from somewhere
         self.playerEntryProxy.motionHunchingDribbling = randint(1, 3)
         self.playerEntryProxy.motionArmMovementDribbling = randint(1, 8)
@@ -366,4 +366,3 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         self.playerEntryProxy.motionPenaltyKick = randint(1, 4)
         self.playerEntryProxy.motionGoalCelebration1 = randint(1, 122)
         self.playerEntryProxy.motionGoalCelebration2 = randint(1, 122)
-
