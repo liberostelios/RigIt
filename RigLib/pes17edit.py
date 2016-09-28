@@ -113,6 +113,120 @@ class EditData:
     def findAppearanceEntryById(self, id):
         return self.appearanceEntries[id]
 
+class TeamFileData:
+    HEADER_LENGTH = 0x50
+    PLAYER_ENTRY_LENGTH = 116
+    APPEARANCE_ENTRY_LENGTH = 72
+    TEAM_ENTRY_LENGTH = 456
+    CHAMPIONSHIP_ENTRY_LENGTH = 92
+    STADIUM_ENTRY_LENGTH  = 128
+    UNIFORM_ENTRY_LENGTH  = 88 #TODO: needs confirmation
+    TEAM_ROSTER_ENTRY_LENGTH  = 164
+    LEAGUE_ROSTER_ENTRY_LENGTH  = 4
+    TEAM_TACTICS_ENTRY_LENGTH  = 520
+    PLAYER_START = 0x834
+    PLAYER_ENTRY_COUNT = 32
+    APPEARANCE_ENTRY_COUNT = 32
+    TEAM_ENTRY_COUNT = 850
+    CHAMPIONSHIP_ENTRY_COUNT = 100
+    STADIUM_ENTRY_COUNT = 100
+    UNIFORM_ENTRY_COUNT = 2500 #TODO: needs confirmation
+    TEAM_ROSTER_ENTRY_COUNT = 850
+    LEAGUE_ROSTER_ENTRY_COUNT = 712
+    TEAM_TACTICS_ENTRY_COUNT = 850
+    TRAILER = 0 #TODO: needs to be researched
+
+    def __init__(self, data): #TODO: allow default values
+        self.fromBytearray(data)
+
+    def fromBytearray(self, data):
+        #TODO: length check
+        #TODO: turn everything into class or something else
+
+        #TODO: this is a temporary override for reading all data as a huge header
+        self.HEADER_LENGTH = self.PLAYER_START
+
+        # Read header
+        self._header = data[:self.HEADER_LENGTH]
+        playerCount = self.PLAYER_ENTRY_COUNT
+
+        # Read player entries
+        self.playerEntries = {} # dictionary to disallow duplicate IDs
+        begin = self.PLAYER_START
+        end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
+        for pos in range(begin, end, self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
+            d = data[pos:self.PLAYER_ENTRY_LENGTH + pos]
+            playerEntry = PlayerEntry(d)
+            self.playerEntries[playerEntry.playerId] = playerEntry
+
+        # Read appearance entries
+        self.appearanceEntries = {} # dictionary to disallow duplicate IDs
+        begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
+        end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
+        for pos in range(begin, end, self.APPEARANCE_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
+            d = data[pos:self.APPEARANCE_ENTRY_LENGTH + pos]
+            appearanceEntry = AppearanceEntry(d)
+            self.appearanceEntries[appearanceEntry.player] = appearanceEntry
+
+        # Read rest
+        length = self.HEADER_LENGTH
+        length += self.PLAYER_ENTRY_LENGTH * self.PLAYER_ENTRY_COUNT
+        length += self.APPEARANCE_ENTRY_LENGTH * self.APPEARANCE_ENTRY_COUNT
+        self._rest = data[length:]
+
+    def toBytearray(self):
+        # Add header
+        result = self._header + b'' # make an actual copy
+
+        # Add player entries
+        for id in sorted(self.playerEntries.keys()):
+            result += self.playerEntries[id].toBytearray()
+        unusedEntries = (self.PLAYER_ENTRY_COUNT - len(self.playerEntries))
+        result += self.PLAYER_ENTRY_LENGTH * unusedEntries * b'\0'
+
+        # Add appearance entries
+        for id in sorted(self.appearanceEntries.keys()):
+            result += self.appearanceEntries[id].toBytearray()
+        unusedEntries = (self.APPEARANCE_ENTRY_COUNT
+        - len(self.appearanceEntries))
+        result += self.APPEARANCE_ENTRY_LENGTH * unusedEntries * b'\0'
+
+        # Add rest and return
+        return result + self._rest
+
+    def findPlayerEntryById(self, id):
+        return self.playerEntries[id]
+
+    def findPlayerEntriesByName(self, name, exact=False):
+        results = []
+        if (exact):
+            for player in self.playerEntries:
+                if (player.playerName == name):
+                    results.append(player)
+        else:
+            for player in self.playerEntries:
+                if (player.playerName.find(name) != -1):
+                    results.append(player)
+        return results
+
+    def findPlayersByTeam(self, name):
+        raise NotImplementedError('Method is not implemented yet')
+
+    def getPlayerCount(self):
+        return len(self.playerEntries)
+
+    def updatePlayer(self, player, id=None):
+        if (id == None):
+            id = player.playerId
+
+    def addPlayer(self, player=None):
+        raise NotImplementedError('Method is not implemented yet')
+
+    def deletePlayerById(self, id):
+        raise NotImplementedError('Method is not implemented yet')
+
+    def findAppearanceEntryById(self, id):
+        return self.appearanceEntries[id]
 
 class StoredDataStructure:
     _attributes = {}
@@ -154,7 +268,7 @@ class StoredDataStructure:
 
 
 class PlayerEntry(StoredDataStructure):
-    _struct = struct.Struct("<iiHHBBBBIIIIIBIHBQ46s16s")
+    _struct = struct.Struct("<iiHHBBBBIIIIIBIHBQ46s16si")
     _attributes = {}
     _attributes['playerId'] = (32, 0, None)
     _attributes['commentaryName'] = (32, 0, -1)
