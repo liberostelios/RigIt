@@ -113,7 +113,7 @@ class EditData:
     def findAppearanceEntryById(self, id):
         return self.appearanceEntries[id]
 
-class TeamFileData:
+class TeamFileData(EditData):
     HEADER_LENGTH = 0x50
     PLAYER_ENTRY_LENGTH = 116
     APPEARANCE_ENTRY_LENGTH = 72
@@ -160,7 +160,7 @@ class TeamFileData:
             self.playerEntries[playerEntry.playerId] = playerEntry
 
         # Read appearance entries
-        # self.appearanceEntries = {} # dictionary to disallow duplicate IDs
+        self.appearanceEntries = {} # dictionary to disallow duplicate IDs
         # begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
         # end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
         # for pos in range(begin, end, self.APPEARANCE_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
@@ -520,7 +520,7 @@ class PlayerEntry(StoredDataStructure):
         self._cpsLongBallExpert = (comPlayingStyle & 16) >> 4
         self._cpsEarlyCross = (comPlayingStyle & 32) >> 5
         self._cpsLongRanger = (comPlayingStyle & 64) >> 6
-        playerSkills = (data[17] << 32 | data[18]) >> 28 & 0xFFFFFFF #TODO: verify order
+        playerSkills = (data[18] << 32 | data[17]) >> 28 & 0xFFFFFFF #TODO: verify order
         self._skillScissorsFeint = playerSkills & 1
         self._skillFlipFlap = (playerSkills & 2) >> 1
         self._skillMarseilleTurn = (playerSkills & 4) >> 2
@@ -553,6 +553,9 @@ class PlayerEntry(StoredDataStructure):
         self._printName = data[20].decode('utf-8') #TODO: verify encoding
         self._playerName = self._playerName[:self._playerName.find('\0')]
         self._printName = self._printName[:self._printName.find('\0')]
+
+        # For compatibility purposes
+        self._unknownI = 0
 
     def toBytearray(self):
         playablePosition = self._centreForward
