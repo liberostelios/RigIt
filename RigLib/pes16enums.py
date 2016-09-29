@@ -13,15 +13,15 @@ class GameDataEnum(Enum):
         else:
             self.description = self.name
         self.data = data #TODO: consider allowing multiple data arguments
-    
+
     def __str__(self):
         return self.description
-        
+
     def __ge__(self, other):
         if self.__class__ is other.__class__:
             return self.menuId >= other.menuId
         return NotImplemented
-        
+
     def __gt__(self, other):
         if self.__class__ is other.__class__:
             return self.menuId > other.menuId
@@ -36,29 +36,29 @@ class GameDataEnum(Enum):
         if self.__class__ is other.__class__:
             return self.menuId < other.menuId
         return NotImplemented
-    
+
     @classmethod
     def stringList(cls):
         strings = []
         for _, member in cls.__members__.items():
             strings.append(str(member))
         return strings
-        
+
     @classmethod
     def _fromAttribute(cls, name, value):
         for member in cls.__members__:
             if (getattr(cls.__members__[member], name) == value):
                 return cls.__members__[member]
         raise ValueError('%r is not a valid %s' % (value, cls.__name__))
-        
+
     @classmethod
     def fromMenuId(cls, menuId):
         return cls._fromAttribute('menuId', menuId)
-        
+
     @classmethod
     def fromGameId(cls, gameId):
         return cls._fromAttribute('gameId', gameId)
-        
+
     @classmethod
     def fromDescription(cls, description):
         return cls._fromAttribute('description', description)
@@ -67,7 +67,7 @@ class GameDataEnum(Enum):
     def fromData(cls, data):
         return cls._fromAttribute('data', data)
 
-        
+
 class RegisteredPosition(GameDataEnum):
     CF = (0, 12, 'Centre Forward')
     SS = (1, 11, 'Second Striker')
@@ -110,7 +110,7 @@ class PlayingStyle(GameDataEnum):
     DEFENSIVE_FULLBACK = (15, 12, 'Defensive Fullback')
     OFFENSIVE_GOALKEEPER = (16, 17, 'Offensive Goalkeeper')
     DEFENSIVE_GOALKEEPER = (17, 18, 'Defensive Goalkeeper')
-    #UNKNOWN = (19, 16, 'Unknown') #TODO: not sure if supported
+    UNKNOWN = (18, 16, 'Unknown') #TODO: not sure if supported
 
 
 class StrongerFoot(GameDataEnum):
@@ -127,7 +127,7 @@ class SkinColor(GameDataEnum):
     BLACK = (5, 6, 'Black', 0x64442C)
     TRANSPARENT = (6, 0, 'Transparent', 0xCC00FF)
     CUSTOM = (7, 7, 'Custom', 0xFFFFFF)
-    
+
 
 class PlayerGlovesColor(GameDataEnum):
     WHITE = (0, 0, 'White', 0xFFFFFF)
@@ -174,6 +174,7 @@ class IrisColor(GameDataEnum):
     SIENNA  = (8, 8, 'Sienna', 0xAF5A18)
     GREEN = (9, 9, 'Green', 0x5C8436)
     PURPLE = (10, 10, 'Purple', 0x9378AB)
+    PURPLEX = (11, 11, 'Purplex', 0x9378AB)
     #TODO: not sure if more colors are supported
 
 
