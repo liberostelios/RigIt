@@ -160,13 +160,13 @@ class TeamFileData:
             self.playerEntries[playerEntry.playerId] = playerEntry
 
         # Read appearance entries
-        self.appearanceEntries = {} # dictionary to disallow duplicate IDs
-        begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
-        end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
-        for pos in range(begin, end, self.APPEARANCE_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
-            d = data[pos:self.APPEARANCE_ENTRY_LENGTH + pos]
-            appearanceEntry = AppearanceEntry(d)
-            self.appearanceEntries[appearanceEntry.player] = appearanceEntry
+        # self.appearanceEntries = {} # dictionary to disallow duplicate IDs
+        # begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
+        # end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
+        # for pos in range(begin, end, self.APPEARANCE_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
+        #     d = data[pos:self.APPEARANCE_ENTRY_LENGTH + pos]
+        #     appearanceEntry = AppearanceEntry(d)
+        #     self.appearanceEntries[appearanceEntry.player] = appearanceEntry
 
         # Read rest
         length = self.HEADER_LENGTH
@@ -268,7 +268,7 @@ class StoredDataStructure:
 
 
 class PlayerEntry(StoredDataStructure):
-    _struct = struct.Struct("<iiHHBBBBIIIIIBIHBQ46s16si")
+    _struct = struct.Struct("<iiHHBBBBIIIIHHIHHII46s16s3s")
     _attributes = {}
     _attributes['playerId'] = (32, 0, None)
     _attributes['commentaryName'] = (32, 0, -1)
@@ -442,78 +442,77 @@ class PlayerEntry(StoredDataStructure):
         self._strongerFoot = StrongerFoot.RIGHT_FOOT
 
     def fromBytearray(self, data): #TODO: check size beforehand
-        paddedData = data[:0x32] + bytearray([0]*2) + data[0x32:]
+        paddedData = data[:0x33] + bytearray([0]) + data[0x33:]
         data = self._struct.unpack(paddedData)
 
-        self._playerId = data[0]
-        self._commentaryName = data[1]
-        self._unknownA = data[2]
-        self._nationalityRegion = data[3]
-        self._height = data[4]
-        self._weight = data[5]
-        self._motionGoalCelebration1 = data[6]
-        self._motionGoalCelebration2 = data[7]
-        self._attackingProwess = data[8] & 0b1111111
+        self._playerId = data[0] # 0x0
+        self._commentaryName = data[1] # 0x4
+        self._unknownA = data[2] # 0x8
+        self._nationalityRegion = data[3] # 0xa
+        self._height = data[4] # 0xc
+        self._weight = data[5] # 0xd
+        self._motionGoalCelebration1 = data[6] # 0xe
+        self._motionGoalCelebration2 = data[7] # 0xf
+        self._attackingProwess = data[8] & 0b1111111 # 0x10
         self._defensiveProwess = data[8] >> 7 & 0b1111111
         self._goalkeeping = data[8] >> 14 & 0b1111111
         self._dribbling = data[8] >> 21 & 0b1111111
         self._motionFreeKick = data[8] >> 28 & 0b1111
-        self._finishing = data[9] & 0b1111111
+        self._finishing = data[9] & 0b1111111 # 0x14
         self._lowPass = data[9] >> 7 & 0b1111111
         self._loftedPass = data[9] >> 14 & 0b1111111
         self._header = data[9] >> 21 & 0b1111111
         self._form = data[9] >> 28 & 0b111
         self._editedCreatedPlayer = data[9] >> 31 & 0b1
-        self._swerve = data[10] & 0b1111111
+        self._swerve = data[10] & 0b1111111 # 0x18
         self._catching = data[10] >> 7 & 0b1111111
         self._clearing = data[10] >> 14 & 0b1111111
         self._reflexes = data[10] >> 21 & 0b1111111
         self._injuryResistance = data[10] >> 28 & 0b11
         self._unknownC = data[10] >> 30 & 0b11
-        self._bodyBalance = data[11] & 0b1111111
-        self._kickingPower = data[11] >> 7 & 0b1111111
-        self._explosivePower = data[11] >> 14 & 0b1111111
-        self._jump = data[11] >> 21 & 0b1111111
+        self._bodyBalance = data[11] & 0b1111111 # 0x1c
+        self._physicalContact = data[11] >> 7 & 0b1111111 #TODO: PHYSICAL CONTACT
+        self._kickingPower = data[11] >> 14 & 0b1111111
+        self._explosivePower = data[11] >> 21 & 0b1111111
         self._motionArmMovementDribbling = data[11] >> 28 & 0b111
         self._unknownD = data[11] >> 31 & 0b1
-        self._registeredPosition = RegisteredPosition.fromGameId(data[12]
+        self._age = data[12] & 0b111111
+        self._registeredPosition = RegisteredPosition.fromGameId(data[12] >> 6
         & 0b1111)
-        self._unknownE = data[12] >> 4 & 0b1
-        self._playingStyle = PlayingStyle.fromGameId(data[12] >> 5 & 0b11111)
-        self._ballControl = data[12] >> 10 & 0b1111111
-        self._ballWinning = data[12] >> 17 & 0b1111111
-        self._coverage = data[12] >> 24 & 0b1111111
-        self._unknownF = data[12] >> 31 & 0b1
-        self._motionArmMovementRunning = data[13] & 0b111
-        self._motionCornerKick = data[13] >> 3 & 0b111
-        self._weakFootAccuracy = data[13] >> 6 & 0b11
-        self._weakFootUsage = data[14] & 0b11
-        playablePosition = data[14] >> 2 & 0x3FFFFFF
-        self._centreForward = playablePosition & 3
-        self._secondStriker = (playablePosition & 12) >> 2
-        self._leftWingForward = (playablePosition & 48) >> 4
-        self._rightWingForward = (playablePosition & 192) >> 6
-        self._attackingMidfielder = (playablePosition & 768) >> 8
-        self._defensiveMidfielder = (playablePosition & 3072) >> 10
-        self._centreMidfielder = (playablePosition & 12288) >> 12
-        self._leftMidfielder = (playablePosition & 49152) >> 14
-        self._rightMidfielder = (playablePosition & 196608) >> 16
-        self._centreBack = (playablePosition & 786432) >> 18
-        self._leftBack = (playablePosition & 3145728) >> 20
-        self._rightBack = (playablePosition & 12582912) >> 22
-        self._goalkeeper = (playablePosition & 50331648) >> 24
-        self._motionHunchingDribbling = data[14] >> 28 & 0b11
-        self._motionHunchingRunning = data[14] >> 30 & 0b11
-        self._motionPenaltyKick = data[15] & 0b11
-        self._placeKicking = data[15] >> 2 & 0b1111111
-        self._speed = data[15] >> 9 & 0b1111111
-        self._age = data[16] & 0b111111
-        self._unknownG = data[16] >> 6 & 0b11
+        self._unknownE = data[12] >> 10 & 0b1 # 0x20
+        self._playingStyle = PlayingStyle.fromGameId(data[12] >> 11 & 0b11111)
+        self._ballControl = data[13] & 0b1111111
+        self._ballWinning = data[13] >> 7 & 0b1111111
+        self._weakFootAccuracy = data[13] >> 14 & 0b11
+        self._jump = data[14] & 0b1111111
+        self._motionArmMovementRunning = data[14] >> 7 & 0b111
+        self._motionCornerKick = data[14] >> 10 & 0b111
+        self._coverage = data[14] >> 13 & 0b1111111
+        self._weakFootUsage = data[14] >> 20 & 0b11
+        self._centreForward = data[14] >> 22 & 0b11
+        self._secondStriker = data[14] >> 24 & 0b11
+        self._leftWingForward = data[14] >> 26 & 0b11
+        self._rightWingForward = data[14] >> 28 & 0b11
+        self._attackingMidfielder = data[14] >> 30 & 0b11
+        self._defensiveMidfielder = data[15] & 0b11
+        self._centreMidfielder = data[15] >> 2 & 0b11
+        self._leftMidfielder = data[15] >> 4 & 0b11
+        self._rightMidfielder = data[15] >> 6 & 0b11
+        self._centreBack = data[15] >> 8 & 0b11
+        self._leftBack = data[15] >> 10 & 0b11
+        self._rightBack = data[15] >> 12 & 0b11
+        self._goalkeeper = data[15] >> 14 & 0b11
+        self._motionHunchingDribbling = data[16] & 0b11
+        self._motionHunchingRunning = data[16] >> 2 & 0b11
+        self._motionPenaltyKick = data[16] >> 4 & 0b11
+        self._placeKicking = data[16] >> 6 & 0b1111111
+        self._unknownF = data[16] >> 13 & 0b111
         self._stamina = data[17] & 0b1111111
-        self._unknownH = data[17] >> 7 & 0b1
-        self._unknownI = data[17] >> 8 & 0b1111
-        self._strongerFoot = StrongerFoot.fromGameId(data[17] >> 12 & 0b1)
-        comPlayingStyle = data[17] >> 13 & 0b1111111 #TODO: verify order
+        self._speed = data[17] >> 7 & 0b1111111
+        self._unknownG = data[17] >> 14 & 0b11111
+        self._strongerFoot = StrongerFoot.fromGameId(data[17] >> 19 & 0b1)
+        self._unknownH = data[17] >> 20 & 0b1
+        comPlayingStyle = data[17] >> 21 & 0b1111111 #TODO: verify order
         self._cpsTrickster = comPlayingStyle & 1
         self._cpsMazingRun = (comPlayingStyle & 2) >> 1
         self._cpsSpeedingBullet = (comPlayingStyle & 4) >> 2
@@ -521,7 +520,7 @@ class PlayerEntry(StoredDataStructure):
         self._cpsLongBallExpert = (comPlayingStyle & 16) >> 4
         self._cpsEarlyCross = (comPlayingStyle & 32) >> 5
         self._cpsLongRanger = (comPlayingStyle & 64) >> 6
-        playerSkills = data[17] >> 20 & 0xFFFFFFF #TODO: verify order
+        playerSkills = (data[17] << 32 | data[18]) >> 28 & 0xFFFFFFF #TODO: verify order
         self._skillScissorsFeint = playerSkills & 1
         self._skillFlipFlap = (playerSkills & 2) >> 1
         self._skillMarseilleTurn = (playerSkills & 4) >> 2
@@ -550,8 +549,8 @@ class PlayerEntry(StoredDataStructure):
         self._skillCaptaincy = (playerSkills & 33554432) >> 25
         self._skillSuperSub = (playerSkills & 67108864) >> 26
         self._skillFightingSpirit = (playerSkills & 134217728) >> 27
-        self._playerName = data[18].decode('utf-8') #TODO: verify encoding
-        self._printName = data[19].decode('utf-8') #TODO: verify encoding
+        self._playerName = data[19].decode('utf-8') #TODO: verify encoding
+        self._printName = data[20].decode('utf-8') #TODO: verify encoding
         self._playerName = self._playerName[:self._playerName.find('\0')]
         self._printName = self._printName[:self._printName.find('\0')]
 
