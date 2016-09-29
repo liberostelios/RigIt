@@ -181,15 +181,9 @@ class TeamFileData(EditData):
         # Add player entries
         for id in sorted(self.playerEntries.keys()):
             result += self.playerEntries[id].toBytearray()
+            result += self.appearanceEntries[id].toBytearray()
         unusedEntries = (self.PLAYER_ENTRY_COUNT - len(self.playerEntries))
         result += self.PLAYER_ENTRY_LENGTH * unusedEntries * b'\0'
-
-        # Add appearance entries
-        for id in sorted(self.appearanceEntries.keys()):
-            result += self.appearanceEntries[id].toBytearray()
-        unusedEntries = (self.APPEARANCE_ENTRY_COUNT
-        - len(self.appearanceEntries))
-        result += self.APPEARANCE_ENTRY_LENGTH * unusedEntries * b'\0'
 
         # Add rest and return
         return result + self._rest
@@ -636,47 +630,51 @@ class PlayerEntry(StoredDataStructure):
         value |= self._unknownC << 30
         data.append(value)
         value = self._bodyBalance
-        value |= self._kickingPower << 7
-        value |= self._explosivePower << 14
-        value |= self._jump << 21
+        value |= self._physicalContact << 7
+        value |= self._kickingPower << 14
+        value |= self._explosivePower << 21
         value |= self._motionArmMovementDribbling << 28
         value |= self._unknownD << 31
         data.append(value)
-        value = self._registeredPosition.gameId
-        value |= self._unknownE << 4
-        value |= self._playingStyle.gameId << 5
-        value |= self._ballControl << 10
-        value |= self._ballWinning << 17
-        value |= self._coverage << 24
-        value |= self._unknownF << 31
-        data.append(value)
-        value = self._motionArmMovementRunning
-        value |= self._motionCornerKick << 3
-        value |= self._weakFootAccuracy << 6
-        data.append(value)
-        value = self._weakFootUsage
-        value |= playablePosition << 2
-        value |= self._motionHunchingDribbling << 28
-        value |= self._motionHunchingRunning << 30
-        data.append(value)
-        value = self._motionPenaltyKick
-        value |= self._placeKicking << 2
-        value |= self._speed << 9
-        data.append(value)
         value = self._age
-        value |= self._unknownG << 6
+        value |= self._registeredPosition.gameId << 6
+        value |= self._unknownE << 10
+        value |= self._playingStyle.gameId << 11
+        data.append(value)
+        value |= self._ballControl
+        value |= self._ballWinning << 7
+        value |= self._weakFootAccuracy << 14
+        data.append(value)
+        value = self._jump
+        value |= self._motionArmMovementRunning << 7
+        value |= self._motionCornerKick << 10
+        value |= self._coverage << 13
+        value |= self._weakFootUsage << 20
+        value |= (playablePosition & 0b1111111111) << 22
+        data.append(value)
+        value = playablePosition >> 10
+        data.append(value)
+        value = self._motionHunchingDribbling
+        value |= self._motionHunchingRunning << 2
+        value |= self._motionPenaltyKick << 4
+        value |= self._placeKicking << 6
+        value |= self._unknownF >> 13
         data.append(value)
         value = self._stamina
-        value |= self._unknownH << 7
-        value |= self._unknownI << 8
-        value |= self._strongerFoot.gameId << 12
-        value |= comPlayingStyle << 13
-        value |= playerSkills << 20
+        value |= self._speed << 7
+        value |= self._unknownG << 14
+        value |= self._strongerFoot.gameId << 19
+        value |= self._unknownH << 20
+        value |= comPlayingStyle << 21
+        value |= (playerSkills & 0b1111) << 28
+        data.append(value)
+        value = playerSkills >> 4
         data.append(value)
         data.append(bytes(self._playerName, 'utf-8')) #TODO: verify
         data.append(bytes(self._printName, 'utf-8')) #TODO: verify
+        data.append(bytes([0, 0, 0]))
         ba = bytearray(self._struct.pack(*data))
-        return ba[:0x32] + ba[0x34:]
+        return ba[:0x33] + ba[0x34:]
 
 class AppearanceEntry(StoredDataStructure): #TODO: complete, use enums
     _struct = struct.Struct("<iIiBBBBBBBBBBB22sB18sB7s")
