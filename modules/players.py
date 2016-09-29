@@ -87,7 +87,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.chbUnknownF, 'unknownF')
         proxy.cleverConnect(self.spxUnknownG, 'unknownG')
         proxy.cleverConnect(self.chbUnknownH, 'unknownH')
-        proxy.cleverConnect(self.spxUnknownI, 'unknownI')
+        #proxy.cleverConnect(self.spxUnknownI, 'unknownI')
         proxy.cleverConnect(self.sldCentreForward, 'centreForward')
         proxy.cleverConnect(self.sldSecondStriker, 'secondStriker')
         proxy.cleverConnect(self.sldLeftWingForward, 'leftWingForward')

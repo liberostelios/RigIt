@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QIcon
 from RigLib.pyqthelperfunctions import *
 from RigLib.pes17edit import *
-from RigLib.pes16crypto import EditFile
+from RigLib.pes17crypto import *
 import os
 
 
@@ -117,3 +117,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             filename = getOpenFileName(self, self._directory, filter)
         if (filename == None):
             return
+
+        binfile = BinFile()
+        binfile.fromBinFile(filename)
+
+        self._editData = TeamFileData(binfile.data)
+
+        self.loadedEditData.emit(self._editData)
+        self.statusbar.showMessage('Loaded ' + os.path.basename(filename) +
+        ' successfully')
