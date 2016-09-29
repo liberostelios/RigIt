@@ -161,12 +161,12 @@ class TeamFileData(EditData):
 
         # Read appearance entries
         self.appearanceEntries = {} # dictionary to disallow duplicate IDs
-        # begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
-        # end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
-        # for pos in range(begin, end, self.APPEARANCE_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
-        #     d = data[pos:self.APPEARANCE_ENTRY_LENGTH + pos]
-        #     appearanceEntry = AppearanceEntry(d)
-        #     self.appearanceEntries[appearanceEntry.player] = appearanceEntry
+        begin = self.PLAYER_START + self.PLAYER_ENTRY_LENGTH
+        end = begin + (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * playerCount
+        for pos in range(begin, end, self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH):
+            d = data[pos:self.APPEARANCE_ENTRY_LENGTH + pos]
+            appearanceEntry = AppearanceEntry(d)
+            self.appearanceEntries[appearanceEntry.player] = appearanceEntry
 
         # Read rest
         length = self.HEADER_LENGTH
@@ -677,7 +677,7 @@ class PlayerEntry(StoredDataStructure):
         return ba[:0x33] + ba[0x34:]
 
 class AppearanceEntry(StoredDataStructure): #TODO: complete, use enums
-    _struct = struct.Struct("<iIiBBBBBBBBBBB22sB18sB7s")
+    _struct = struct.Struct("<iIiBBBBBBBBBBB22sB20sB5s")
     _attributes = {}
     _attributes['player'] = (32, 0, -1) #TODO: None is not handled well
     _attributes['editedFaceSettings'] = (1, 0, 0)
