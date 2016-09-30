@@ -3,7 +3,7 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QDir
-from RigLib.pes16enums import GameDataEnum
+from RigLib.pes17enums import GameDataEnum
 
 
 def _createQIconFromColor(color, width=24, height=12):
