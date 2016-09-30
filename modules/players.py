@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import *
 from random import randint
 from RigLib.pes16edit import *
 from RigLib.pes16proxies import *
-from RigLib.pes16enums import *
+from RigLib.pes17enums import *
 from RigLib.pyqthelperfunctions import *
 import os
 
