@@ -168,6 +168,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.spxSpeed, 'speed')
         proxy.cleverConnect(self.spxExplosivePower, 'explosivePower')
         proxy.cleverConnect(self.spxBodyBalance, 'bodyBalance')
+        proxy.cleverConnect(self.spxPhysicalContact, 'physicalContact')
         proxy.cleverConnect(self.spxJump, 'jump')
         proxy.cleverConnect(self.spxStamina, 'stamina')
         proxy.cleverConnect(self.spxGoalkeeping, 'goalkeeping')

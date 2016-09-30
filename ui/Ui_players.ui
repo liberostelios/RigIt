@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1200</width>
-    <height>720</height>
+    <width>1336</width>
+    <height>938</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -1630,112 +1630,112 @@
           </property>
          </widget>
         </item>
-        <item row="15" column="0">
+        <item row="17" column="0">
          <widget class="QLabel" name="lblJump">
           <property name="text">
            <string>Jump:</string>
           </property>
          </widget>
         </item>
-        <item row="15" column="1">
+        <item row="17" column="1">
          <widget class="QSpinBox" name="spxJump">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="16" column="0">
+        <item row="18" column="0">
          <widget class="QLabel" name="lblStamina">
           <property name="text">
            <string>Stamina:</string>
           </property>
          </widget>
         </item>
-        <item row="16" column="1">
+        <item row="18" column="1">
          <widget class="QSpinBox" name="spxStamina">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="17" column="0">
+        <item row="19" column="0">
          <widget class="QLabel" name="lblGoalkeeping">
           <property name="text">
            <string>Goalkeeping:</string>
           </property>
          </widget>
         </item>
-        <item row="17" column="1">
+        <item row="19" column="1">
          <widget class="QSpinBox" name="spxGoalkeeping">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="18" column="0">
+        <item row="20" column="0">
          <widget class="QLabel" name="lblCatching">
           <property name="text">
            <string>Catching:</string>
           </property>
          </widget>
         </item>
-        <item row="18" column="1">
+        <item row="20" column="1">
          <widget class="QSpinBox" name="spxCatching">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="19" column="0">
+        <item row="21" column="0">
          <widget class="QLabel" name="lblClearing">
           <property name="text">
            <string>Clearing:</string>
           </property>
          </widget>
         </item>
-        <item row="19" column="1">
+        <item row="21" column="1">
          <widget class="QSpinBox" name="spxClearing">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="20" column="0">
+        <item row="22" column="0">
          <widget class="QLabel" name="lblReflexes">
           <property name="text">
            <string>Reflexes:</string>
           </property>
          </widget>
         </item>
-        <item row="20" column="1">
+        <item row="22" column="1">
          <widget class="QSpinBox" name="spxReflexes">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="21" column="0">
+        <item row="23" column="0">
          <widget class="QLabel" name="lblCoverage">
           <property name="text">
            <string>Coverage:</string>
           </property>
          </widget>
         </item>
-        <item row="21" column="1">
+        <item row="23" column="1">
          <widget class="QSpinBox" name="spxCoverage">
           <property name="maximum">
            <number>127</number>
           </property>
          </widget>
         </item>
-        <item row="22" column="0">
+        <item row="24" column="0">
          <widget class="QLabel" name="lblWeakFootUsage">
           <property name="text">
            <string>Weak Foot Usage:</string>
           </property>
          </widget>
         </item>
-        <item row="22" column="1">
+        <item row="24" column="1">
          <widget class="QSpinBox" name="spxWeakFootUsage">
           <property name="minimum">
            <number>1</number>
@@ -1745,14 +1745,14 @@
           </property>
          </widget>
         </item>
-        <item row="23" column="0">
+        <item row="25" column="0">
          <widget class="QLabel" name="lblWeakFootAccuracy">
           <property name="text">
            <string>Weak Foot Accuracy:</string>
           </property>
          </widget>
         </item>
-        <item row="23" column="1">
+        <item row="25" column="1">
          <widget class="QSpinBox" name="spxWeakFootAccuracy">
           <property name="minimum">
            <number>1</number>
@@ -1762,14 +1762,14 @@
           </property>
          </widget>
         </item>
-        <item row="24" column="0">
+        <item row="26" column="0">
          <widget class="QLabel" name="lblForm">
           <property name="text">
            <string>Form:</string>
           </property>
          </widget>
         </item>
-        <item row="24" column="1">
+        <item row="26" column="1">
          <widget class="QSpinBox" name="spxForm">
           <property name="minimum">
            <number>1</number>
@@ -1786,7 +1786,7 @@
           </property>
          </widget>
         </item>
-        <item row="25" column="1">
+        <item row="27" column="1">
          <widget class="QSpinBox" name="spxInjuryResistance">
           <property name="prefix">
            <string/>
@@ -1802,10 +1802,24 @@
           </property>
          </widget>
         </item>
-        <item row="25" column="0">
+        <item row="27" column="0">
          <widget class="QLabel" name="lblInjuryResistance">
           <property name="text">
            <string>Injury Resistance:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="0">
+         <widget class="QLabel" name="lblPhysicalContact">
+          <property name="text">
+           <string>Physical Contact:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="15" column="1">
+         <widget class="QSpinBox" name="spxPhysicalContact">
+          <property name="maximum">
+           <number>127</number>
           </property>
          </widget>
         </item>

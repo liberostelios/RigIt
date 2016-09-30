@@ -30,6 +30,7 @@ class PlayerEntryProxy(SignalSlotProxy):
         self._signals['injuryResistance'] = AttributeSignal(int)
         self._signals['unknownC'] = AttributeSignal(int)
         self._signals['bodyBalance'] = AttributeSignal(int)
+        self._signals['physicalContact'] = AttributeSignal(int)
         self._signals['kickingPower'] = AttributeSignal(int)
         self._signals['explosivePower'] = AttributeSignal(int)
         self._signals['jump'] = AttributeSignal(int)
@@ -110,8 +111,8 @@ class PlayerEntryProxy(SignalSlotProxy):
         self._signals['playingStyleMenuId'] = AttributeSignal(int)
         self._signals['registeredPositionMenuId'] = AttributeSignal(int)
         self._signals['strongerFootMenuId'] = AttributeSignal(bool)
-    
-    
+
+
 class AppearanceEntryProxy(SignalSlotProxy):
     def _setupSignals(self):
         self._signals = {}
@@ -159,4 +160,3 @@ class AppearanceEntryProxy(SignalSlotProxy):
         self._signals['spectaclesMenuId'] = AttributeSignal(int)
         self._signals['skinColorMenuId'] = AttributeSignal(int)
         self._signals['irisColorMenuId'] = AttributeSignal(int)
-

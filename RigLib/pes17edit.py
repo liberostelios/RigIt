@@ -291,6 +291,7 @@ class PlayerEntry(StoredDataStructure):
     _attributes['injuryResistance'] = (2, 1, 1)
     _attributes['unknownC'] = (2, 0, 0)
     _attributes['bodyBalance'] = (7, 0, 80)
+    _attributes['physicalContact'] = (7, 0, 80)
     _attributes['kickingPower'] = (7, 0, 80)
     _attributes['explosivePower'] = (7, 0, 80)
     _attributes['jump'] = (7, 0, 80)
