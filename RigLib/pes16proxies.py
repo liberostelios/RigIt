@@ -8,6 +8,7 @@ class PlayerEntryProxy(SignalSlotProxy):
         self._signals['commentaryName'] = AttributeSignal(int)
         self._signals['unknownA'] = AttributeSignal(int)
         self._signals['nationalityRegion'] = AttributeSignal(int)
+        self._signals['nationalityRegionMenuId'] = AttributeSignal(int)
         self._signals['height'] = AttributeSignal(int)
         self._signals['weight'] = AttributeSignal(int)
         self._signals['motionGoalCelebration1'] = AttributeSignal(int)

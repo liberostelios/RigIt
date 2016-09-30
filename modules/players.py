@@ -2,7 +2,7 @@ from ui.Ui_players import Ui_PlayersWidget
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from random import randint
-from RigLib.pes16edit import *
+from RigLib.pes17edit import *
 from RigLib.pes16proxies import *
 from RigLib.pes17enums import *
 from RigLib.pyqthelperfunctions import *
@@ -40,6 +40,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         fillQComboBox(self.cbxSpectacles, Spectacles)
         fillQComboBox(self.cbxSpectaclesFrameColor, SpectaclesFrameColor)
         fillQComboBox(self.cbxIrisColor, IrisColor)
+        fillQComboBox(self.cbxNationalityRegion, NationalityRegion)
 
         # Connect signals to slots
         self.lstPlayerEntries.currentItemChanged.connect(self.loadPlayerEntry)
@@ -73,7 +74,7 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.ldtPlayerName, 'playerName')
         proxy.cleverConnect(self.ldtPrintName, 'printName')
         proxy.cleverConnect(self.spxCommentaryId, 'commentaryName')
-        proxy.cleverConnect(self.spxNationalityRegion, 'nationalityRegion')
+        proxy.cleverConnect(self.cbxNationalityRegion, 'nationalityRegionMenuId')
         proxy.cleverConnect(self.spxAge, 'age')
         proxy.cleverConnect(self.cbxStrongerFoot, 'strongerFootMenuId')
         proxy.cleverConnect(self.cbxRegisteredPosition, 'registeredPositionMenuId')

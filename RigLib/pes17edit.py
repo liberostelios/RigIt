@@ -1,6 +1,6 @@
 import struct
 from math import pow
-from RigLib.pes16enums import *
+from RigLib.pes17enums import *
 
 
 class EditData:
@@ -366,6 +366,22 @@ class PlayerEntry(StoredDataStructure):
     _attributes['skillFightingSpirit'] = (1, 0, 0)
 
     @property
+    def nationalityRegion(self):
+        return self._nationalityRegion
+
+    @nationalityRegion.setter
+    def nationalityRegion(self, value):
+        self._nationalityRegion = value
+
+    @property
+    def nationalityRegionMenuId(self):
+        return self._nationalityRegion.menuId
+
+    @nationalityRegionMenuId.setter
+    def nationalityRegionMenuId(self, value):
+        self._nationalityRegion = NationalityRegion.fromMenuId(value)
+
+    @property
     def playingStyle(self):
         return self._playingStyle
 
@@ -444,7 +460,7 @@ class PlayerEntry(StoredDataStructure):
         self._playerId = data[0] # 0x0
         self._commentaryName = data[1] # 0x4
         self._unknownA = data[2] # 0x8
-        self._nationalityRegion = data[3] # 0xa
+        self._nationalityRegion = NationalityRegion.fromGameId(data[3]) # 0xa
         self._height = data[4] # 0xc
         self._weight = data[5] # 0xd
         self._motionGoalCelebration1 = data[6] # 0xe
@@ -606,7 +622,7 @@ class PlayerEntry(StoredDataStructure):
         data.append(self._playerId)
         data.append(self._commentaryName)
         data.append(self._unknownA)
-        data.append(self._nationalityRegion)
+        data.append(self._nationalityRegion.gameId)
         data.append(self._height)
         data.append(self._weight)
         data.append(self._motionGoalCelebration1)
@@ -679,7 +695,7 @@ class PlayerEntry(StoredDataStructure):
         return ba[:0x33] + ba[0x34:]
 
 class AppearanceEntry(StoredDataStructure): #TODO: complete, use enums
-    _struct = struct.Struct("<iIiBBBBBBBBBBB22sB20sB5s")
+    _struct = struct.Struct("<iIiBBBBBBBBBBB22sB18sB7s")
     _attributes = {}
     _attributes['player'] = (32, 0, -1) #TODO: None is not handled well
     _attributes['editedFaceSettings'] = (1, 0, 0)
