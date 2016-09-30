@@ -53,6 +53,7 @@
     <addaction name="actionSave_As_Edit_data"/>
     <addaction name="separator"/>
     <addaction name="actionOpen_PS4_bin"/>
+    <addaction name="actionSave_PS4_bin"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -97,6 +98,14 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+P</string>
+   </property>
+  </action>
+  <action name="actionSave_PS4_bin">
+   <property name="text">
+    <string>Save PS4 Team bin...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+R</string>
    </property>
   </action>
   <action name="actionExit">

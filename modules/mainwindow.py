@@ -45,6 +45,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.saveEdit(True))
         self.actionOpen_PS4_bin.triggered.connect(lambda:
         self.openBin())
+        self.actionSave_PS4_bin.triggered.connect(lambda:
+        self.saveBin())
         self.actionExit.triggered.connect(self.close)
 
     @pyqtSlot(bool, str)
@@ -126,3 +128,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.loadedEditData.emit(self._editData)
         self.statusbar.showMessage('Loaded ' + os.path.basename(filename) +
         ' successfully')
+
+    @pyqtSlot(bool)
+    def saveBin(self, filename=None):
+        if (filename == None):
+            filter = 'Team bin file (*.bin)'
+            filename = getSaveFileName(self, self._directory, filter)
+        if (filename == None):
+            return
+
+        binfile = BinFile()
+        binfile.data = self._editData.toBytearray()
+
+        with open(filename + '.dec', 'wb') as f:
+            f.write(binfile.data)
+
+        binfile.saveToBinFile(filename)

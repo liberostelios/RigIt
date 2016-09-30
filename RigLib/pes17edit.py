@@ -180,10 +180,11 @@ class TeamFileData(EditData):
 
         # Add player entries
         for id in sorted(self.playerEntries.keys()):
-            result += self.playerEntries[id].toBytearray()
-            result += self.appearanceEntries[id].toBytearray()
-        unusedEntries = (self.PLAYER_ENTRY_COUNT - len(self.playerEntries))
-        result += self.PLAYER_ENTRY_LENGTH * unusedEntries * b'\0'
+            if id > 0:
+                result += self.playerEntries[id].toBytearray()
+                result += self.appearanceEntries[id].toBytearray()
+        unusedEntries = (self.PLAYER_ENTRY_COUNT - len(self.playerEntries)) + 1
+        result += (self.PLAYER_ENTRY_LENGTH + self.APPEARANCE_ENTRY_LENGTH) * unusedEntries * b'\0'
 
         # Add rest and return
         return result + self._rest
