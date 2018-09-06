@@ -5,11 +5,13 @@ from PyQt5.QtGui import QIcon
 from RigLib.pyqthelperfunctions import *
 from RigLib.pes17edit import *
 from RigLib.pes17crypto import *
+import RigLib.pes19edit
+import RigLib.pes19crypto
 import os
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
-    loadedEditData = pyqtSignal(EditData)
+    loadedEditData = pyqtSignal(RigLib.pes19edit.TeamFileData)
     savedEditFile = pyqtSignal()
 
     def __init__(self, parent=None):
@@ -47,6 +49,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.openBin())
         self.actionSave_PS4_bin.triggered.connect(lambda:
         self.saveBin())
+        self.actionOpen_PS4_Ted_file.triggered.connect(lambda:
+        self.openTed())
+        self.actionSave_PS4_Ted_file.triggered.connect(lambda:
+        self.saveTed())
         self.actionExit.triggered.connect(self.close)
 
     @pyqtSlot(bool, str)
@@ -133,6 +139,40 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def saveBin(self, filename=None):
         if (filename == None):
             filter = 'Team bin file (*.bin)'
+            filename = getSaveFileName(self, self._directory, filter)
+        if (filename == None):
+            return
+
+        binfile = BinFile()
+        binfile.data = self._editData.toBytearray()
+
+        with open(filename + '.dec', 'wb') as f:
+            f.write(binfile.data)
+
+        binfile.saveToBinFile(filename)
+
+    @pyqtSlot(bool)
+    def openTed(self, filename=None):
+        # Get save filename if needed
+        if (filename == None):
+            filter = 'Team file (*.ted)'
+            filename = getOpenFileName(self, self._directory, filter)
+        if (filename == None):
+            return
+
+        binfile = RigLib.pes19crypto.BinFile()
+        binfile.fromBinFile(filename)
+
+        self._editData = RigLib.pes19edit.TeamFileData(binfile.data)
+
+        self.loadedEditData.emit(self._editData)
+        self.statusbar.showMessage('Loaded ' + os.path.basename(filename) +
+        ' successfully')
+
+    @pyqtSlot(bool)
+    def saveTed(self, filename=None):
+        if (filename == None):
+            filter = 'Team file (*.ted)'
             filename = getSaveFileName(self, self._directory, filter)
         if (filename == None):
             return
