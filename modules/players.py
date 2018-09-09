@@ -2,8 +2,8 @@ from ui.Ui_players import Ui_PlayersWidget
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from random import randint
-from RigLib.pes17edit import *
-from RigLib.pes16proxies import *
+from RigLib.pes19edit import *
+from RigLib.pes19proxies import *
 from RigLib.pes17enums import *
 from RigLib.pyqthelperfunctions import *
 import os
@@ -160,15 +160,15 @@ class PlayersWidget(QWidget, Ui_PlayersWidget):
         proxy.cleverConnect(self.spxLowPass, 'lowPass')
         proxy.cleverConnect(self.spxLoftedPass, 'loftedPass')
         proxy.cleverConnect(self.spxFinishing, 'finishing')
-        proxy.cleverConnect(self.spxPlaceKicking, 'placeKicking')
-        proxy.cleverConnect(self.spxSwerve, 'swerve')
+        proxy.cleverConnect(self.spxPlaceKicking, 'setPieceTaking')
+        proxy.cleverConnect(self.spxSwerve, 'curve')
         proxy.cleverConnect(self.spxHeader, 'header')
         proxy.cleverConnect(self.spxDefensiveProwess, 'defensiveProwess')
         proxy.cleverConnect(self.spxBallWinning, 'ballWinning')
         proxy.cleverConnect(self.spxKickingPower, 'kickingPower')
         proxy.cleverConnect(self.spxSpeed, 'speed')
         proxy.cleverConnect(self.spxExplosivePower, 'explosivePower')
-        proxy.cleverConnect(self.spxBodyBalance, 'bodyBalance')
+        proxy.cleverConnect(self.spxBodyBalance, 'bodyControl')
         proxy.cleverConnect(self.spxPhysicalContact, 'physicalContact')
         proxy.cleverConnect(self.spxJump, 'jump')
         proxy.cleverConnect(self.spxStamina, 'stamina')

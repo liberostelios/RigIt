@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 import inspect
 from warnings import warn
-from RigLib.pes16edit import *
+from RigLib.pes19edit import *
 
 
 class SignalSlotProxy(QObject): # TODO: disconnect/clean up methods
